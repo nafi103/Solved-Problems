@@ -100,7 +100,24 @@ int getRandomNumber(int l, int r) {return uniform_int_distribution<int>(l, r)(rn
 
 void solve()
 {
-    
+    int n,m;
+    cin>>n>>m;
+    vi mark(m+1,0);
+    while(n--){
+        int l,r;
+        cin>>l>>r;
+        mark[l]++;
+        if(r+1<=m) mark[r+1]--;
+    }
+    for(int i = 1; i<=m; i++){
+        mark[i]+=mark[i-1];
+    }
+    vi ans;
+    for(int i = 1; i<=m; i++){
+        if(!mark[i]) ans.pb(i);
+    }
+    cout<<ans.size()<<endl;
+    writev(ans);
 }
 
 int32_t main()
@@ -111,7 +128,7 @@ int32_t main()
     cout.precision(10);
     cout.setf(ios::fixed);
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
         solve();
 }
