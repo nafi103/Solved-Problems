@@ -107,7 +107,7 @@ void solve()
     for(int i = 1; i<n; i++){
         if(v[i]<=2*v[i-1]) cnt++;
         else cnt = 1;
-        ans = max(ans,cnt);
+        ans = max(ans,cnt); 
     }
     cout<<ans<<endl;
 }
