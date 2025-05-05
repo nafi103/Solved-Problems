@@ -44,7 +44,7 @@ template <class T> using pbds = tree<T, null_type, less<T>, rb_tree_tag, tree_or
 
 void solve()
 {
-    
+    int n,m;
 }
 
 int32_t main()
