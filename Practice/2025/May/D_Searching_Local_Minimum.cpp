@@ -48,44 +48,8 @@ void query(int i){
 
 void solve()
 {
-    int n,cnt = 0,x;
+    int n;
     cin>>n;
-    vector<int>v(n+2,-1),nums;
-    v[0] = inf;
-    v[n+1] = inf;
-    for(int i = 0; i<n; i++){
-        nums.push_back(i+1);
-    }
-    for(int i = n-1; i>0; i--){
-        swap(nums[i],nums[getRandomNumber(0,i)]);
-    }
-    while(cnt<100){
-        int curr = nums.back(),left = curr-1, right = curr+1;
-        nums.pop_back();
-        if(v[curr]==-1){
-            query(curr);
-            cnt++;
-            cin>>x;
-            v[curr] = x;
-        }
-        if(v[left]==-1){
-            query(left);
-            cnt++;
-            cin>>x;
-            v[left] = x;
-        }
-        if(v[right]==-1){
-            query(right);
-            cnt++;
-            cin>>x;
-            v[right] = x;
-        }
-        if(v[curr]<min(v[left],v[right])){
-            cout<<"! "<<curr<<endl;
-            return;
-        }
-    }
-    cout<<-1<<endl;
 }
 
 int32_t main()
