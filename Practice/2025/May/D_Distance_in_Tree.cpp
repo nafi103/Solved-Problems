@@ -40,11 +40,65 @@ template <class T> using pbds = tree<T, null_type, less<T>, rb_tree_tag, tree_or
 #endif
 
 /****************************************************************/
+int k, ans = 0;
 
+struct Node{
+    vector<int>adj, distance;
+    Node(){
+        distance.assign(k+1,0);
+        distance[0] = 1;
+    }
+    void merge(Node & other){
+        for(int i = 1; i<=k; i++)
+            distance[i]+=other.distance[i-1];
+    }
+
+    void reroot(Node parent){
+        for(int i = 1; i<=k; i++){
+            parent.distance[i] -= distance[i-1];
+        }
+        for(int i = 1; i<=k; i++)
+            distance[i]+=parent.distance[i-1];
+    }
+};
+
+vector<Node>t;
+
+void dfs(int node, int parent){
+    for(auto &child: t[node].adj){
+        if(child!=parent){
+            dfs(child,node);
+            t[node].merge(t[child]);
+        }
+    }
+}
+
+void find_pair(int node, int parent){
+    if(parent!=-1){
+        t[node].reroot(t[parent]);
+    }
+    ans+=t[node].distance[k];
+    for(auto &child: t[node].adj){
+        if(child!=parent){
+            find_pair(child,node);
+        }
+    }
+}
 
 void solve()
 {
-    int n,m;
+    int n;
+    cin>>n>>k;
+    t.assign(n+1,Node());
+    for(int i = 1; i<n; i++){
+        int u,v;
+        cin>>u>>v;
+        t[u].adj.push_back(v);
+        t[v].adj.push_back(u);
+    }
+    dfs(1,-1);
+    find_pair(1,-1);
+    cout<<ans/2<<endl;
 }
 
 int32_t main()
@@ -55,7 +109,6 @@ int32_t main()
     cout.precision(10);
     cout.setf(ios::fixed);
     int t = 1;
-    cin >> t;
     for(int z = 1; z<=t; z++){
         // google(z);
         solve();
