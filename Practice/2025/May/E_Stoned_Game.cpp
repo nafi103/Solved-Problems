@@ -25,6 +25,7 @@ const int mod = 998244353;
     for (auto &x : v) \
     cout << x << " "; \
     cout<<endl
+#define endl "\n"
 #define yes cout<<"YES"<<endl
 #define no cout<<"NO"<<endl
 #define remove_punctuation(text) regex_replace(text, regex(R"([^\w\s])"), "")
@@ -39,28 +40,24 @@ template <class T> using pbds = tree<T, null_type, less<T>, rb_tree_tag, tree_or
 #endif
 
 /****************************************************************/
-mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-int getRandomNumber(int l, int r) {return uniform_int_distribution<int>(l, r)(rng);} 
 
-int query(int i){
-    cout<<"? "<<i<<endl;
-    cin>>i;
-    return i;
-}
 
 void solve()
 {
     int n;
     cin>>n;
-    int l = 1, r = n;
-    while(l<r){
-        int mid = (l+r)/2;
-        if(query(mid)>query(mid+1))
-            l = mid+1;
-        else
-            r = mid;
+    vector<int>v(n);
+    readv(v);
+    int sum = accumulate(all(v),0ll), mx = *max_element(all(v));
+    if(2*mx>sum or n==1){
+        cout<<"T"<<endl;
+    }else{
+        if(sum&1){
+            cout<<"T"<<endl;
+        }else{
+            cout<<"HL"<<endl;
+        }
     }
-    cout<<"! "<<l<<endl;
 }
 
 int32_t main()
@@ -71,6 +68,7 @@ int32_t main()
     cout.precision(10);
     cout.setf(ios::fixed);
     int t = 1;
+    cin >> t;
     for(int z = 1; z<=t; z++){
         // google(z);
         solve();
