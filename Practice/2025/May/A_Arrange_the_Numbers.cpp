@@ -44,7 +44,7 @@ int expo(int a, int b, int m) {int res = 1; while (b > 0) {if (b & 1)res = (res 
 int mminvprime(int a, int b) {return expo(a, b - 2, b);}
 
 const int N = 1010;
-vector<int>fact(N),ifact(N);
+vector<int>fact(N),ifact(N),dearrange(N);
 
 int nCr(int n, int r){
     if(n<r)
@@ -56,7 +56,11 @@ void solve()
 {
     int n,m,k;
     cin>>n>>m>>k;
-    
+    int add = 0;
+    for(int i = 0; i<=n-m; i++){
+        add = (add+((nCr(n-m,i)*dearrange[n-k-i]))%mod)%mod;
+    }
+    cout<<(add*nCr(m,k))%mod<<endl;
 }
 
 int32_t main()
@@ -76,8 +80,13 @@ int32_t main()
     for(int i = N-2; i>=0; i--){
         ifact[i] = (ifact[i+1]*(i+1))%mod;
     }
+    dearrange[0] = 1;
+    dearrange[1] = 0;
+    for(int i = 2;i<N; i++){
+        dearrange[i] = ((i-1)*(dearrange[i-1]+dearrange[i-2]))%mod;
+    }
     for(int z = 1; z<=t; z++){
-        // google(z);
+        cout<<"Case "<<z<<": ";
         solve();
     }
 }
