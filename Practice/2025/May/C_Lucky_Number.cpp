@@ -39,13 +39,14 @@ template <class T> using pbds = tree<T, null_type, less<T>, rb_tree_tag, tree_or
 
 /****************************************************************/
 
-vector<int>ans;
+pbds<int>d;
+const int N = 1429434;
 
 void solve()
 {
     int n;
     cin>>n;
-    cout<<ans[n]<<endl;
+    cout<<*(d.find_by_order(n-1))<<endl;
 }
 
 int32_t main()
@@ -55,24 +56,26 @@ int32_t main()
     fastIO;
     cout.precision(10);
     cout.setf(ios::fixed);
-    int n = 1429434;
-    for(int i = 1; i<n; i+=2){
-        ans.push_back(i);
+    for(int i = 1; i<N; i+=2){
+        d.insert(i);
     }
-    for(int i = 1; ans[i]<=sz(ans); i++){
-        vector<int>new_ans;
-        for(int j = 0; j<sz(ans); j++){
-            if((j+1)%ans[i]!=0){
-                new_ans.push_back(ans[j]);
-            }
+    for(int i = 1; i<sz(d); i++){
+        int curr = *(d.find_by_order(i));
+        if(curr>sz(d)){
+            break;
         }
-        new_ans = ans;
+        vector<int>to_remove;
+        for(int j = curr-1; j<sz(d); j+=curr){
+            to_remove.push_back(*(d.find_by_order(j)));
+        }
+        for(auto &x: to_remove){
+            d.erase(x);
+        }
     }
-    debug(ans)
     int t = 1;
     cin >> t;
     for(int z = 1; z<=t; z++){
-        // google(z);
+        cout<<"Case "<<z<<": ";
         solve();
     }
 }
