@@ -40,15 +40,33 @@ template <class T> using pbds = tree<T, null_type, less<T>, rb_tree_tag, tree_or
 #endif
 
 /****************************************************************/
-
+vector<int>spf(101);
 
 void solve()
 {
-    string str;
-    cin>>str;
-    str = str.substr(0,sz(str)/2);
-    reverse(all(str));
-    cout<<str<<endl;
+    int n;
+    cin>>n;
+    map<int,int>mp;
+    for(int i = 2; i<=n; i++){
+        int x = i;
+        while(x>1){
+            int p = spf[x];
+            while(x%p==0){
+                mp[p]++;
+                x/=p;
+            }
+        }
+    }
+    int cnt = 0;
+    cout<<n<<" = ";
+    for(auto &[f,s]: mp){
+        if(cnt){
+            cout<<" * ";
+        }
+        cout<<f<<" ("<<s<<")";
+        cnt++;
+    }
+    cout<<endl;
 }
 
 int32_t main()
@@ -60,8 +78,17 @@ int32_t main()
     cout.setf(ios::fixed);
     int t = 1;
     cin >> t;
+    for(int i = 1; i<101; i++)
+        spf[i] = i;
+    for(int i = 2; i*i<101; i++){
+        if(spf[i] == i){
+            for(int j = i+i; j<101; j+=i){
+                spf[j] = min(spf[j],i);
+            }
+        }
+    }
     for(int z = 1; z<=t; z++){
-        // google(z);
+        cout<<"Case "<<z<<": ";
         solve();
     }
 }
