@@ -40,43 +40,90 @@ template <class T> using pbds = tree<T, null_type, less<T>, rb_tree_tag, tree_or
 #endif
 
 /****************************************************************/
+const double EPS = 1e-9;
+
 struct Point {
-    int x, y;
-    void read(){
+    double x, y;
+
+    Point() { x = y = 0.0; }
+
+    Point(double _x, double _y) : x(_x), y(_y) {}
+
+    bool operator < (Point other) const {
+        if (fabs(x-other.x) > EPS)
+            return x < other.x;
+        return y < other.y;
+    }
+
+    bool operator == (const Point &other) const {
+        return (fabs(x-other.x) < EPS) && (fabs(y-other.y) < EPS);
+    }
+
+    void  read(){
         cin>>x>>y;
     }
 };
 
-pair<int,int> slope(Point &a, Point &b){
-    int dy = a.y - b.y;
-    int dx = a.x - b.x;
-    int g = gcd(dy,dx);
-    dy/=g;
-    dx/=g;
-    if(dy<0){
-        dy*= -1;
-        dx*=-1;
+struct Vector {
+    double x, y;
+    Vector(double _x, double _y) : x(_x), y(_y) {}
+};
+
+Vector toVector(const Point &a, const Point &b) {
+    return Vector(b.x-a.x, b.y-a.y);
+}
+
+double cross(Vector a, Vector b) { return a.x*b.y- a.y*b.x; }
+
+bool ccw(Point p, Point q, Point r) {
+    return cross(toVector(p, q), toVector(p, r)) > EPS;
+}
+
+bool collinear(Point p, Point q, Point r) {
+    return fabs(cross(toVector(p, q), toVector(p, r))) < EPS;
+}
+
+bool in_mid(Point &a, Point &b, Point &c){
+    vector<Point>temp = {a,b,c};
+    sort(all(temp));
+    return temp[1]==c;
+}
+
+bool sign(int x){
+    return x<0;
+}
+
+bool intersect(Point &a, Point &b, Point &c, Point &d){
+    if (cross(toVector(a, b), toVector(a, c)) == 0 and in_mid(a, b, c)) {
+        return true;
     }
-    return {dy,dx};
+    if (cross(toVector(a, b), toVector(a, d)) == 0 and in_mid(a, b, d)) {
+        return true;
+    }
+    if (cross(toVector(c, d), toVector(c, a)) == 0 and in_mid(c, d, a)) {
+        return true;
+    }
+    if (cross(toVector(c, d), toVector(c, b)) == 0 and in_mid(c, d, b)) {
+        return true;
+    }
+    if(sign(cross(toVector(a,b),toVector(a,c)))!=sign(cross(toVector(a,b),toVector(a,d)))
+        and sign(cross(toVector(c,d),toVector(c,a)))!=sign(cross(toVector(c,d),toVector(c,b)))){
+        return true;
+    }
+    return false;
 }
 
 void solve()
 {
-    vector<Point>points(4);
-    for(int i = 0; i<4; i++){
-        points[i].read();
-    }
-    debug(slope(points[0],points[1]))
-    debug(slope(points[2],points[3]))
-    if(slope(points[0],points[1])==slope(points[2],points[3])){
-        if(slope(points[0],points[1])==slope(points[0],points[3])){
-            yes;
-        }else{
-            no;
-        }
-    }
-    else{
+    Point a,b,c,d;
+    a.read();
+    b.read();
+    c.read();
+    d.read();
+    if(intersect(a,b,c,d)){
         yes;
+    }else{
+        no;
     }
 }
 
