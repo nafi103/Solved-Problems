@@ -41,78 +41,35 @@ template <class T> using pbds = tree<T, null_type, less<T>, rb_tree_tag, tree_or
 
 /****************************************************************/
 
-
-struct Point {
-    int x, y;
-    
-    Point() { x = y = 0 ;}
-
-    Point(int _x, int _y) : x(_x), y(_y) {}
-    
-    void read(){
-        cin>>x>>y;
-    }
-};
-
-map<array<int,3>,vector<Point>>mp;
-
-int sq(int x){
-    return x*x;
-}
-
-int dist(const Point &p1, const Point &p2) {
-    return sq(p1.x-p2.x) + sq(p1.y-p2.y);
-}
-
-pair<int,int>slope(const Point &p1, const Point &p2){
-    int sy = p1.y - p2.y;
-    int sx = p1.x - p2.x;
-    int g = gcd(sy,sx);
-    sy/=g;
-    sx/=g;
-    if(sy==0){
-        sx=0;
-    }
-    if(sy<0){
-        sy*=-1;
-        sx*=-1;
-    }
-    return {sy,sx};
-}
-
-void slope_and_distance(const Point &p1, const Point &p2){
-    int d = dist(p1,p2),sx,sy;
-    tie(sy,sx) = slope(p1,p2);
-    mp[{sy,sx,d}].push_back(p1);
-}
-
 void solve()
 {
-    mp.clear();
     int n,ans = 0;
     cin>>n;
-    vector<Point> points(n);
-    for(int i = 0; i<n; i++){
-        points[i].read();
+    vector<pair<int,int>>points(n);
+    for(auto &[x,y]: points){
+        cin>>x>>y;
     }
-    for(int i = 0; i<n-1; i++){
+    vector<pair<int,int>>v;
+    v.reserve(1e6+10);
+    for(int i = 0; i+1<n; i++){
         for(int j = i+1; j<n; j++){
-            slope_and_distance(points[i],points[j]);
+            int xp = points[i].ff+points[j].ff;
+            int yp = points[i].ss+points[j].ss;
+            v.push_back({xp,yp});
         }
     }
-    for(auto &[f,s]: mp){
-        if(sz(s)==1)
-            continue;
-        auto [sy,sx,d] = f;
-        for(int i = 0; i<sz(s)-1; i++){
-            for(int j = i+1; j<sz(s); j++){
-                if(make_pair(sy,sx)!=slope(s[i],s[j])){
-                    ans++;
-                }
-            }
+    sort(all(v));
+    int cnt = 1;
+    for(int i = 1; i<sz(v); i++){
+        if(v[i]==v[i-1]){
+            cnt++;
+        }else{
+            ans+=(cnt*(cnt-1))/2;
+            cnt = 1;
         }
     }
-    cout<<ans/2<<endl;
+    ans+=(cnt*(cnt-1))/2;
+    cout<<ans<<endl;
 }
 
 int32_t main()
