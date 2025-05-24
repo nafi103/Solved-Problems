@@ -41,7 +41,7 @@ template <class T> using pbds = tree<T, null_type, less<T>, rb_tree_tag, tree_or
 
 /****************************************************************/
 
-const double eps = 1e-9;
+const double eps = 1e-12;
 
 struct Point {
     double x, y;
@@ -114,9 +114,8 @@ void solve()
     p2.read();
     r1.read();
     r3.read();
-    Point r2(r2.x,r1.y), r4(r1.x,r2.y);
-    int cnt = intersect(p1,p2,r1,r2)+intersect(p1,p2,r3,r2)+intersect(p1,p2,r3,r4)+intersect(p1,p2,r1,r4);
-    if((intersect(p1,p2,r1,r3) or intersect(p1,p2,r2,r4)) and cnt>=2){
+    Point r2(r3.x,r1.y), r4(r1.x,r3.y);
+    if(intersect(p1,p2,r1,r2) or intersect(p1,p2,r3,r2) or intersect(p1,p2,r3,r4) or intersect(p1,p2,r1,r4)){
         cout<<'T';
     }else{
         cout<<'F';
@@ -133,8 +132,9 @@ int32_t main()
     int t = 1;
     cin >> t;
     for(int z = 1; z<=t; z++){
-        if(z>1)
+        if(z>1){
             cout<<endl;
+        }
         solve();
     }
 }
