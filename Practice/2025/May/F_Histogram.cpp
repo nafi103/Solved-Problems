@@ -130,6 +130,44 @@ void solve()
     cout<<ans<<endl;
 }
 
+void solve2(){
+    int n;
+    cin>>n;
+    vector<int>v(n),left(n),right(n);
+    readv(v);
+    stack<int>st;
+    for(int i = 0; i<n; i++){
+        while(!st.empty() and v[st.top()]>=v[i]){
+            st.pop();
+        }
+        if(st.empty()){
+            left[i] = 0;
+        }else{
+            left[i] = st.top()+1;
+        }
+        st.push(i);
+    }
+    while(!st.empty()){
+        st.pop();
+    }
+    for(int i = n-1; i>=0; i--){
+        while(!st.empty() and v[st.top()]>=v[i]){
+            st.pop();
+        }
+        if(st.empty()){
+            right[i] = n-1;
+        }else{
+            right[i] = st.top()-1;
+        }
+        st.push(i);
+    }
+    int ans = n;
+    for(int i = 0; i<n; i++){
+        ans = max(ans,(right[i]-left[i]+1)*v[i]);
+    }
+    cout<<ans<<endl;
+}
+
 int32_t main()
 {
     // freopen("paint.in", "r", stdin);
@@ -141,6 +179,6 @@ int32_t main()
     cin >> t;
     for(int z = 1; z<=t; z++){
         cout<<"Case "<<z<<": ";
-        solve();
+        solve2();
     }
 }
