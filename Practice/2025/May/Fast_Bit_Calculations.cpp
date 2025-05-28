@@ -54,13 +54,9 @@ int f(int i, int prev, int flag){
     ans = 0;
     if(flag){
         ans = prev + f(i+1,1,1) + f(i+1,0,1);
-        if(prev==1)
-            ans+=f(i+1,1,1);
     }else{
         if(v[i]){
             ans = prev + f(i+1,1,0) + f(i+1,0,1);
-            if(prev)
-                ans+=f(i+1,1,0);
         }else{
             ans = f(i+1,0,0);
         }
