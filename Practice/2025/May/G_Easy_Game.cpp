@@ -40,80 +40,31 @@ template <class T> using pbds = tree<T, null_type, less<T>, rb_tree_tag, tree_or
 #endif
 
 /****************************************************************/
-pair<int,int> dummy = {-inf,-inf};
-vector<vector<vector<pair<int,int>>>>dp;
+vector<vector<int>>dp;
 vector<int>v;
 int n;
 
-template <typename T1, typename T2>
-pair<T1, T2>& operator+=(pair<T1, T2>& a, const pair<T1, T2>& b) {
-    a.first += b.first;
-    a.second += b.second;
-    return a;
-}
-
-template <typename T1, typename T2>
-pair<T1, T2>& operator-=(pair<T1, T2>& a, const pair<T1, T2>& b) {
-    a.first -= b.first;
-    a.second -= b.second;
-    return a;
-}
-
-pair<int,int>f(int i, int j, int p){
-    if(i>j){
-        return {0,0};
+int f(int i, int j){
+    if(i>j)
+        return 0;
+    if(i==j)
+        return v[i];
+    int &ans = dp[i][j];
+    if(ans!=-inf)
+        return dp[i][j];
+    int sum = 0;
+    for(int l = i; l<=j; l++){
+        sum+=v[l];
+        sum-=f(l+1,j);
+        ans = max(ans,sum);
+        sum+=f(l+1,j);
     }
-    if(i==j){
-        if(p==0){
-            return {v[i],0};
-        }else{
-            return {0,v[i]};
-        }
-    }
-    pair<int,int> &ans = dp[i][j][p];
-    if(ans!=dummy){
-        return ans;
-    }
-    if(!p){
-        ans = {-inf,inf};
-        pair<int,int> curr = {0,0};
-        for(int k = i; k<=j; k++){
-            curr+={v[k],0};
-            curr+=f(k+1,j,1);
-            if(curr.ff-curr.ss>ans.ff-ans.ss){
-                ans = curr;
-            }
-            curr-=f(k+1,j,1);
-        }
-        curr = {0,0};
-        for(int k = j; k>i; k--){
-            curr+={v[k],0};
-            curr+=f(i,k-1,1);
-            if(curr.ff-curr.ss>ans.ff-ans.ss){
-                ans = curr;
-            }
-            curr-=f(i,k-1,1);
-        }
-    }else{
-        ans = {inf,-inf};
-        pair<int,int> curr = {0,0};
-        for(int k = i; k<=j; k++){
-            curr+={0,v[k]};
-            curr+=f(k+1,j,0);
-            if(curr.ff-curr.ss<ans.ff-ans.ss){
-                ans = curr;
-            }
-            curr-=f(k+1,j,0);
-        }
-        curr = {0,0};
-        for(int k = j; k>i; k--){
-            curr+={0,v[k]};
-            curr+=f(i,k-1,0);
-            if(curr.ff-curr.ss<ans.ff-ans.ss){
-                ans = curr;
-            }
-            curr-=f(i,k-1,0);
-        }
+    sum = 0;
+    for(int l = j; l>i; l--){
+        sum+=v[l];
+        sum-=f(i,l-1);
+        ans = max(ans,sum);
+        sum+=f(i,l-1);
     }
     return ans;
 }
@@ -125,8 +76,8 @@ void solve()
     cin>>n;
     v.resize(n);
     readv(v);
-    dp.assign(n,vector<vector<pair<int,int>>>(n,vector<pair<int,int>>(2,dummy)));
-    cout<<f(0,n-1,0).ff - f(0,n-1,0).ss<<endl;
+    dp.assign(n,vector<int>(n,-inf));
+    cout<<f(0,n-1)<<endl;
 }
 
 int32_t main()
