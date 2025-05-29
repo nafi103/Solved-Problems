@@ -40,23 +40,33 @@ template <class T> using pbds = tree<T, null_type, less<T>, rb_tree_tag, tree_or
 #endif
 
 /****************************************************************/
+const pair<int,int> dummy = {-1,-1};
 int n;
 vector<int>v;
-vector<vector<vector<int>>>dp;
+vector<vector<vector<pair<int,int>>>>dp;
 
-int f(int i, int prev, int flag){
+pair<int,int> operator+(const pair<int,int>&a, const pair<int,int>&b){
+    return {a.ff + b.ff,a.ss + b.ss};
+}
+
+pair<int,int> f(int i, int prev, int flag){
     if(i>=n){
-        return 0;
+        return {0,1};
     }
-    int &ans = dp[i][prev][flag];
-    if(ans!=-1)
+    pair<int,int> &ans = dp[i][prev][flag];
+    if(ans!=dummy)
         return ans;
-    ans = 0;
     if(flag){
-        ans = prev + f(i+1,1,1) + f(i+1,0,1);
+        ans = f(i+1,1,1);
+        if(prev)
+            ans.ff+=ans.ss;
+        ans = ans + f(i+1,0,1);
     }else{
         if(v[i]){
-            ans = prev + f(i+1,1,0) + f(i+1,0,1);
+            ans = f(i+1,1,0);
+            if(prev)
+                ans.ff+=ans.ss;
+            ans = ans + f(i+1,0,1);
         }else{
             ans = f(i+1,0,0);
         }
@@ -79,8 +89,8 @@ void solve()
     }
     reverse(all(v));
     n = sz(v);
-    dp.assign(n,vector<vector<int>>(2,vector<int>(2,-1)));
-    cout<<f(0,0,0)<<endl;
+    dp.assign(n,vector<vector<pair<int,int>>>(2,vector<pair<int,int>>(2,{-1,-1})));
+    cout<<f(0,0,0).ff<<endl;
 }
 
 int32_t main()
