@@ -41,7 +41,7 @@ template <class T> using pbds = tree<T, null_type, less<T>, rb_tree_tag, tree_or
 
 /****************************************************************/
 
-vector<int> prefix_function(string s) {
+vector<int> prefix_function(string &s) {
     int n = (int)s.length();
     vector<int> pie(n);
     for (int i = 1; i < n; i++) {
@@ -55,12 +55,8 @@ vector<int> prefix_function(string s) {
     return pie;
 }
 
-void solve()
-{
-    string a, b;
-    cin>>a>>b;
+int find_occurence(string &a, string &b, vector<int>&pref_func){
     int n = sz(a),m = sz(b), ans = 0, j = 0;
-    vector<int>pref_func = prefix_function(b);
     for(int i = 0; i<n; i++){
         if(j<m and a[i]==b[j])
             j++;
@@ -74,7 +70,15 @@ void solve()
         if(j==m)
             ans++;
     }
-    cout<<ans<<endl;
+    return ans;
+}
+
+void solve()
+{
+    string a, b;
+    cin>>a>>b;
+    vector<int>pref_func = prefix_function(b);
+    cout<<find_occurence(a,b,pref_func)<<endl;
 }
 
 int32_t main()
