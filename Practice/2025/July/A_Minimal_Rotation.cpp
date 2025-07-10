@@ -65,9 +65,7 @@ void solve()
             j = start;
             pref_arr[i] = 0;
         }
-        debug(i) debug(start) debug(pref_arr)
     }
-    debug(pref_arr)
     for(int i = start, cnt = 0; cnt<n; i = (i+1)%n,cnt++){
         cout<<str[i];
     }
