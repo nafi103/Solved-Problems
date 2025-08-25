@@ -1,0 +1,92 @@
+#include<bits/stdc++.h>
+#include<ext/pb_ds/assoc_container.hpp>
+#include<ext/pb_ds/tree_policy.hpp>
+
+using namespace std;
+using namespace chrono;
+using namespace __gnu_pbds;
+
+/****************************************************************/
+
+#define int long long
+#define pi acos(-1.0)
+const int mod = 998244353;
+#define inf 1e18+10
+#define sz(x) (int)(x).size()
+#define LSOne(x) ((x)&(-x))
+#define all(x) x.begin(), x.end()
+#define readv(v)      \
+    for (auto &x : v) \
+    cin >> x
+#define fastIO ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr)
+template <class T> using pbds = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update >;
+
+#ifndef ONLINE_JUDGE
+#include "debug.h"
+#define debug(x) cerr << #x << " = "; _print(x); cerr << endl;
+#else
+#define debug(...)
+#endif
+
+/****************************************************************/
+
+
+void solve()
+{
+    int n,freq;
+    cin>>n;
+    vector<pair<int,int>>node;
+    node.reserve(n);
+    for(int i = 1; i<=n; i++){
+        cout<<"? "<<i<<" "<<n;
+        for(int i = 1; i<=n; i++){
+            cout<<" "<<i;
+        }
+        cout<<endl;
+        cin>>freq;
+        node.push_back({i,freq});
+    }
+    sort(all(node),[&](pair<int,int>&a,pair<int,int>&b){
+        if(a.second!=b.second)
+            return a.second>b.second;
+        return a.first<b.first;
+    });
+    vector<int>ans;
+    ans.reserve(node[0].second);
+    ans.push_back(node[0].first);
+    int i = 0;
+    int rem = node[0].second-1;
+    while(rem--){
+        for(int j = i+1; j<n; j++){
+            if(node[i].second==node[j].second)
+                continue;
+            cout<<"? "<<node[i].first<<" "<<2<<" "<<node[i].first<<" "<<node[j].first<<endl;
+            cin>>freq;
+            if(freq>1){
+                ans.push_back(node[j].first);
+                i = j;
+                break;
+            }
+        }
+    }
+    cout<<"! "<<sz(ans);
+    for(auto &x: ans){
+        cout<<" "<<x;
+    }
+    cout<<endl;
+}
+
+int32_t main()
+{
+    // freopen("paint.in", "r", stdin);
+    // freopen("paint.out", "w", stdout);
+    fastIO;
+    cout.precision(10);
+    cout.setf(ios::fixed);
+    int t = 1;
+    cin >> t;
+    for(int z = 1; z<=t; z++){
+        // cout<<"Case "<<z<<": ";
+        solve();
+    }
+}
