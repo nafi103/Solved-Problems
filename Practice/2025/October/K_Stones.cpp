@@ -36,24 +36,21 @@ void solve()
 {
     int n,k;
     cin>>n>>k;
-    vector<int> w(n),v(n);
-    for(int i = 0; i<n; i++){
-        cin>>w[i]>>v[i];
-    }
-    int s = accumulate(all(v),0ll), ans = 0;
-    vector<int>dp(s+1,-1);
-    dp[0] = 0;
-    for(int i = 0; i<n; i++){
-        for(int j = s; j>=v[i]; j--){
-            if(dp[j-v[i]]!=-1)
-                dp[j] = (dp[j]==-1?dp[j-v[i]]+w[i]:min(dp[j-v[i]]+w[i],dp[j]));
+    vector<bool>win(k+1,false);
+    vector<int>v(n);
+    readv(v);
+    sort(all(v));
+    for(int i = 0; i<k; i++){
+        if(!win[i]){
+            for(int j = 0; j<n and i+v[j]<=k; j++){
+                win[i+v[j]] = true;
+            }
         }
     }
-    for(int i = 1; i<=s; i++){
-        if(dp[i]<=k and dp[i]!=-1)
-            ans = i;
-    }
-    cout<<ans<<endl;
+    if(win[k])
+        cout<<"First"<<endl;
+    else
+        cout<<"Second"<<endl;
 }
 
 int32_t main()
