@@ -2,3 +2,5 @@
 *.cph/
 *.exe
 *.vscode
+input.txt
+output.txt
