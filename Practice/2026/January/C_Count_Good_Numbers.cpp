@@ -20,8 +20,25 @@ const int inf = 1e18 + 10;
 
 /****************************************************************/
 
-int lcm(int a, int b){
-    return (a * b) / __gcd(a,b);
+vector<int> 
+add = {2, 3, 5, 7, 30, 42, 70, 105},
+del = {6, 10, 14, 15, 21, 35, 210};
+
+void solve()
+{
+    int l, r;
+    cin >> l >> r;
+    int rbad = 0, lbad = 0;
+    for(auto &x: add){
+        rbad += r / x;
+        lbad += (l - 1) / x;
+    }
+    for(auto &x: del){
+        rbad -= r / x;
+        lbad -= (l - 1) / x;
+    }
+    int range_bad = rbad - lbad;
+    cout << (r - l + 1) - range_bad << endl;
 }
 
 int32_t main()
@@ -31,25 +48,11 @@ int32_t main()
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
     cout.precision(10);
     cout.setf(ios::fixed);
-    int n, m;
-    while(cin >> n >> m){
-        int a[m], skip = 0, r = (1 << m);
-        for(int i = 0; i < m; i++)
-            cin >> a[i];
-        for(int i = 1; i < r; i++){
-            int l = 1;
-            for(int j = 0; j < m; j++){
-                if(i & (1 << j))
-                    l = lcm(l, a[j]);
-                if(l > n)
-                    break;
-            }
-            if(__builtin_popcount(i) & 1){
-                skip += n / l;
-            }else{
-                skip -= n / l;
-            }
-        }
-        cout << n - skip << endl;
+    int t = 1;
+    cin >> t;
+    for (int z = 1; z <= t; z++)
+    {
+        // cout<<"Case "<<z<<": ";
+        solve();
     }
 }

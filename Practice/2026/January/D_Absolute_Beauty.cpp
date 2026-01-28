@@ -20,8 +20,35 @@ const int inf = 1e18 + 10;
 
 /****************************************************************/
 
-int lcm(int a, int b){
-    return (a * b) / __gcd(a,b);
+const int N = 2e5 + 10;
+int a[N], b[N], n;
+
+void input(){
+    cin >> n;
+    for(int i = 1; i <= n; i++)
+        cin >> a[i];
+    for(int i = 1; i <= n; i++){
+        cin >> b[i];
+        if(a[i] > b[i])
+            swap(a[i], b[i]);
+    }
+}
+
+void solve()
+{
+    input();
+    int ans = 0;
+    for(int i = 1; i <= n; i++)
+        ans += (b[i] - a[i]);
+    int minb = inf, maxa = -inf;
+    for(int i = 1; i <= n; i++){
+        if(b[i] < minb)
+            minb = b[i];
+        if(a[i] > maxa)
+            maxa = a[i];
+    }
+    ans += 2 * max(0ll, maxa - minb);
+    cout << ans << endl;
 }
 
 int32_t main()
@@ -31,25 +58,11 @@ int32_t main()
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
     cout.precision(10);
     cout.setf(ios::fixed);
-    int n, m;
-    while(cin >> n >> m){
-        int a[m], skip = 0, r = (1 << m);
-        for(int i = 0; i < m; i++)
-            cin >> a[i];
-        for(int i = 1; i < r; i++){
-            int l = 1;
-            for(int j = 0; j < m; j++){
-                if(i & (1 << j))
-                    l = lcm(l, a[j]);
-                if(l > n)
-                    break;
-            }
-            if(__builtin_popcount(i) & 1){
-                skip += n / l;
-            }else{
-                skip -= n / l;
-            }
-        }
-        cout << n - skip << endl;
+    int t = 1;
+    cin >> t;
+    for (int z = 1; z <= t; z++)
+    {
+        // cout<<"Case "<<z<<": ";
+        solve();
     }
 }

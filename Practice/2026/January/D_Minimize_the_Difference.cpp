@@ -1,7 +1,13 @@
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 
 using namespace std;
+using namespace chrono;
+using namespace __gnu_pbds;
 
+template <class T>
+using pbds = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 /****************************************************************/
 
 #define int long long
@@ -20,8 +26,28 @@ const int inf = 1e18 + 10;
 
 /****************************************************************/
 
-int lcm(int a, int b){
-    return (a * b) / __gcd(a,b);
+const int N = 2e5 + 10;
+int n, a[N];
+
+void input(){
+    cin >> n;
+    for(int i = 0; i < n; i++){
+        cin >> a[i];
+    }
+}
+
+void solve()
+{
+    input();
+    pbds<pair<int,int>> d;
+    d.insert({a[n - 1], 1});
+    for(int i = n - 2; i >= 0; i--){
+        if(a[i] > (*d.begin()).first){
+            
+        }else{
+            d.insert({a[i], 1});
+        }
+    }
 }
 
 int32_t main()
@@ -31,25 +57,11 @@ int32_t main()
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
     cout.precision(10);
     cout.setf(ios::fixed);
-    int n, m;
-    while(cin >> n >> m){
-        int a[m], skip = 0, r = (1 << m);
-        for(int i = 0; i < m; i++)
-            cin >> a[i];
-        for(int i = 1; i < r; i++){
-            int l = 1;
-            for(int j = 0; j < m; j++){
-                if(i & (1 << j))
-                    l = lcm(l, a[j]);
-                if(l > n)
-                    break;
-            }
-            if(__builtin_popcount(i) & 1){
-                skip += n / l;
-            }else{
-                skip -= n / l;
-            }
-        }
-        cout << n - skip << endl;
+    int t = 1;
+    cin >> t;
+    for (int z = 1; z <= t; z++)
+    {
+        // cout<<"Case "<<z<<": ";
+        solve();
     }
 }
