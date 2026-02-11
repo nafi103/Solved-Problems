@@ -22,44 +22,18 @@ const int inf = 1e18 + 10;
 
 void solve()
 {
-    string str;
-    map<char,int> cnt;
-    cin >> str;
-    int n = sz(str);
-    for(auto &x: str)
-        cnt[x]++;
-    string ans = "";
+    int n;
+    cin >> n;
+    int area = 0;
+    pair<int,int> points[n + 1];
+    for(int i = 0; i < n; i++)
+        cin >> points[i].first >> points[i].second;
+    points[n] = points[0];
     for(int i = 0; i < n; i++){
-        int m = n - i;
-        char not_allowed = '$', take = '$';
-        if(i)
-            not_allowed = ans[i - 1];
-        for(auto &[f,s]: cnt){
-            if(s >= (m + 2) / 2){
-                take = f;
-                s--;
-                break;
-            }
-        }
-        if(take == '$'){
-            for(auto &[f,s]: cnt){
-                if(f != not_allowed){
-                    s--;
-                    take = f;
-                    break;
-                }
-            }
-        }
-        if(take == '$' or take == not_allowed){
-            cout << -1 << endl;
-            return;
-        }else{
-            if(cnt[take] == 0)
-                cnt.erase(take);
-            ans.push_back(take);
-        }
+        area += points[i].first * points[i + 1].second;
+        area -= points[i].second * points[i + 1].first;
     }
-    cout << ans << endl;
+    cout << abs(area) << endl;
 }
 
 int32_t main()
