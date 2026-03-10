@@ -20,118 +20,45 @@ const int inf = 1e18 + 10;
 
 /****************************************************************/
 
-struct Node
-{
-    int value;
-
-    Node(int val = 1) : value(val) {}
-};
-
-Node merge(Node &left, Node &right)
-{
-    if(left.value == inf or right.value == inf or log(left.value) + log(right.value) > log(inf))
-        return Node(inf);
-    return Node(left.value * right.value);
-}
-
-struct Segment_Tree
-{
-    int n;
-    vector<int> v;
-    vector<Node> st;
-
-    Segment_Tree(vector<int> &_v, int _n)
-    {
-        n = _n;
-        st.resize(4 * n);
-        v = _v;
-        build(1, 1, n);
-    }
-
-    void build(int node, int b, int e)
-    {
-        if (b == e)
-        {
-            st[node] = Node(v[b]);
-            return;
-        }
-        int mid = (b + e) / 2, left = 2 * node, right = 2 * node + 1;
-        build(left, b, mid);
-        build(right, mid + 1, e);
-        st[node] = merge(st[left], st[right]);
-    }
-
-    void update(int node, int b, int e, int &idx, Node &value)
-    {
-        if (e < idx or b > idx)
-            return;
-        if (b == idx and e == idx)
-        {
-            st[node] = value;
-            return;
-        }
-        int mid = (b + e) / 2, left = 2 * node, right = 2 * node + 1;
-        update(left, b, mid, idx, value);
-        update(right, mid + 1, e, idx, value);
-        st[node] = merge(st[left], st[right]);
-    }
-
-    Node query(int node, int b, int e, int &l, int &r)
-    {
-        if (e < l or b > r)
-            return Node();
-        if (b >= l and e <= r)
-        {
-            return st[node];
-        }
-        int mid = (b + e) / 2, left = 2 * node, right = 2 * node + 1;
-        Node query_left = query(left, b, mid, l, r), query_right = query(right, mid + 1, e, l, r);
-        return merge(query_left, query_right);
-    }
-
-    int query(int l, int r){
-        return query(1, 1, n, l, r).value;
-    }
-};
-
 const int N = 2e5 + 10;
-int pref_sum[N];
-map<pair<int,int>,array<int,3>>dp;
-vector<int> arr;
-
-array<int, 3> f(int i, int j, Segment_Tree &st){
-    if(dp.count({i, j}))
-        return dp[{i, j}];
-    int save_i = i, save_j = j;
-    while(i < j and arr[i] == 1)
-        i++;
-    while(j > i and arr[j] == 1)
-        j--;
-    int sum = pref_sum[j] - (i == 0 ? 0 : pref_sum[i - 1]);
-    int mul = st.query(i, j);
-    if(i == j or mul >= sum){
-        return dp[{save_i, save_j}] = {mul - sum, i, j};
-    }
-    return dp[{save_i, save_j}] = max(f(i + 1, j, st), f(i, j - 1, st));
-}
+int arr[N], n, pref[N], prod[N];
 
 void solve()
 {
-    arr.clear();
-    dp.clear();
-    int n;
     cin >> n;
-    arr.resize(n + 1);
+    vector<int> g_two;
     for(int i = 1; i <= n; i++){
         cin >> arr[i];
-        pref_sum[i] = arr[i] + pref_sum[i - 1];
+        if(arr[i] > 1)
+            g_two.push_back(i);
+        pref[i] = arr[i] + pref[i - 1];
+        if(log(prod[i - 1]) + log(arr[i]) < log(inf))
+            prod[i] = prod[i - 1] * arr[i];
+        else
+            prod[i] = inf;
     }
-    if(pref_sum[n] == n){
-        cout << 1 << " " << 1 << endl;
+    if(prod[n] == inf){
+        int l = 1, r = n;
+        while(arr[l] == 1)
+            l++;
+        while(arr[r] == 1)
+            r--;
+        cout << l << " " << r << endl;
         return;
     }
-    Segment_Tree st(arr, n);
-    auto [mul, l, r] = f(1, n, st);
+    int m = sz(g_two), l = 1, r = 1, mx = 0;
+    for(int i = 0; i < m - 1; i++){
+        int p = g_two[i];
+        for(int j = i + 1; j < m; j++){
+            int q = g_two[j];
+            int sum = pref[q] - pref[p - 1], mul = prod[q] / prod[p - 1];
+            if(mul - sum > mx){
+                mx = mul - sum;
+                l = p;
+                r = q;
+            }
+        }
+    }
     cout << l << " " << r << endl;
 }
 
@@ -142,6 +69,7 @@ int32_t main()
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
     cout.precision(10);
     cout.setf(ios::fixed);
+    prod[0] = 1;
     int t = 1;
     cin >> t;
     for (int z = 1; z <= t; z++)
