@@ -90,5 +90,6 @@ int32_t main()
     {
         // cout<<"Case "<<z<<": ";
         solve();
+        cout << endl;
     }
 }
