@@ -31,7 +31,7 @@ void solve()
     pair<int,int> top_right = {-inf, -inf}, bottom_right = {-inf, inf};
     for(int i = 0, x, y; i < n; i++){
         cin >> x >> y;
-        if(x + y > top_right.xx + top_right.xx){
+        if(x + y > top_right.xx + top_right.yy){
             top_right = {x, y};
         }
         if(x - y > bottom_right.xx - bottom_right.yy){
