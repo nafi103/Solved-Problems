@@ -20,44 +20,40 @@ const int inf = 1e18 + 10;
 
 /****************************************************************/
 
+const int N = 2e5 + 10;
+int value[N], ans = 0, k;
+vector<int> g[N];
+
+void dfs(int node, int parent){
+    for(auto &child: g[node]){
+        if(child != parent){
+            dfs(child, node);
+            ans += min(value[child], k - value[child]);
+            value[node] += value[child];
+        }
+    }
+}
+
 void solve()
 {
-    int n;
-    cin >> n;
-    vector<int> arr(n);
-    vector<pair<int,int>> steps;
-
-    for(int i = 0; i < n; i++){
-        cin >> arr[i];
-        int x = arr[i];
-        vector<int> tmp;
-        while(find(all(tmp), x) == tmp.end()){
-            steps.push_back({x, sz(tmp)});
-            tmp.push_back(x);
-            if(x & 1)
-                x++;
-            else
-                x /= 2;
-        }
+    int n, root = 0;
+    cin >> n >> k;
+    k <<= 1;
+    for(int i = 0, x; i < k; i++){
+        cin >> x;
+        x--;
+        value[x] = 1;
+        root = x;
     }
 
-    sort(all(steps));
-    int p = 0, ans = inf, m = sz(steps);
-    while(p < m){
-        auto [curr, total] = steps[p];
-        p++;
-        int cnt = 1;
-        while(p < m and steps[p].first == curr){
-            total += steps[p].second;
-            cnt++;
-            p++;
-        }
-
-        if(cnt == n){
-            ans = min(ans, total);
-        }
+    for(int i = 1, u, v; i < n; i++){
+        cin >> u >> v;
+        u--, v--;
+        g[u].push_back(v);
+        g[v].push_back(u);
     }
 
+    dfs(root, -1);
     cout << ans << endl;
 }
 
@@ -69,7 +65,6 @@ int32_t main()
     cout.precision(10);
     cout.setf(ios::fixed);
     int t = 1;
-    cin >> t;
     for (int z = 1; z <= t; z++)
     {
         // cout<<"Case "<<z<<": ";

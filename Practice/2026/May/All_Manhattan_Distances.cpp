@@ -20,45 +20,42 @@ const int inf = 1e18 + 10;
 
 /****************************************************************/
 
+void print128(__int128_t n) {
+    if (n == 0) {
+        cout << 0 << endl;
+        return;
+    }
+    string s;
+    while (n > 0) {
+        s += (char)('0' + (n % 10));
+        n /= 10;
+    }
+    reverse(all(s));
+    cout << s << endl;
+}
+
 void solve()
 {
     int n;
     cin >> n;
-    vector<int> arr(n);
-    vector<pair<int,int>> steps;
-
+    vector<int> x(n), y(n);
     for(int i = 0; i < n; i++){
-        cin >> arr[i];
-        int x = arr[i];
-        vector<int> tmp;
-        while(find(all(tmp), x) == tmp.end()){
-            steps.push_back({x, sz(tmp)});
-            tmp.push_back(x);
-            if(x & 1)
-                x++;
-            else
-                x /= 2;
-        }
+        cin >> x[i] >> y[i];
     }
 
-    sort(all(steps));
-    int p = 0, ans = inf, m = sz(steps);
-    while(p < m){
-        auto [curr, total] = steps[p];
-        p++;
-        int cnt = 1;
-        while(p < m and steps[p].first == curr){
-            total += steps[p].second;
-            cnt++;
-            p++;
-        }
+    sort(all(x)); sort(all(y));
 
-        if(cnt == n){
-            ans = min(ans, total);
-        }
+    int sumx = 0, sumy = 0;
+    __int128_t ans = 0;
+    for(int i = 0; i < n; i++){
+        ans += (x[i] * i - sumx);
+        ans += (y[i] * i - sumy);
+
+        sumx += x[i];
+        sumy += y[i];
     }
 
-    cout << ans << endl;
+    print128(ans);
 }
 
 int32_t main()
@@ -69,7 +66,6 @@ int32_t main()
     cout.precision(10);
     cout.setf(ios::fixed);
     int t = 1;
-    cin >> t;
     for (int z = 1; z <= t; z++)
     {
         // cout<<"Case "<<z<<": ";

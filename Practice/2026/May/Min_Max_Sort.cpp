@@ -24,41 +24,25 @@ void solve()
 {
     int n;
     cin >> n;
-    vector<int> arr(n);
-    vector<pair<int,int>> steps;
-
-    for(int i = 0; i < n; i++){
-        cin >> arr[i];
-        int x = arr[i];
-        vector<int> tmp;
-        while(find(all(tmp), x) == tmp.end()){
-            steps.push_back({x, sz(tmp)});
-            tmp.push_back(x);
-            if(x & 1)
-                x++;
-            else
-                x /= 2;
-        }
+    vector<int> id(n + 1);
+    for(int i = 1, x; i <= n; i++){
+        cin >> x;
+        id[x] = i;
     }
 
-    sort(all(steps));
-    int p = 0, ans = inf, m = sz(steps);
-    while(p < m){
-        auto [curr, total] = steps[p];
-        p++;
-        int cnt = 1;
-        while(p < m and steps[p].first == curr){
-            total += steps[p].second;
-            cnt++;
-            p++;
+    int m1 = (n + 1) / 2, m2 = (n + 2) / 2;
+    while(m1 >= 1){
+        if(m1 < m2){
+            int nxt = m1 + 1, prev = m2 - 1;
+            if(id[m1] > id[nxt] or id[m2] < id[prev]){
+                cout << m1 << endl;
+                return;
+            }
         }
-
-        if(cnt == n){
-            ans = min(ans, total);
-        }
+        m1--, m2++;
     }
 
-    cout << ans << endl;
+    cout << 0 << endl;
 }
 
 int32_t main()

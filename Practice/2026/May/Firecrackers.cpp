@@ -22,39 +22,33 @@ const int inf = 1e18 + 10;
 
 void solve()
 {
-    int n;
-    cin >> n;
-    vector<int> arr(n);
-    vector<pair<int,int>> steps;
+    int n, m, a, b, d, extra;
+    cin >> n >> m >> a >> b;
+    multiset<int> s;
 
-    for(int i = 0; i < n; i++){
-        cin >> arr[i];
-        int x = arr[i];
-        vector<int> tmp;
-        while(find(all(tmp), x) == tmp.end()){
-            steps.push_back({x, sz(tmp)});
-            tmp.push_back(x);
-            if(x & 1)
-                x++;
-            else
-                x /= 2;
-        }
+    if(a < b){
+        d = (b - a - 1);
+        extra = a - 1;
+    }else{
+        d = (a - b - 1);
+        extra = (n - a);
     }
 
-    sort(all(steps));
-    int p = 0, ans = inf, m = sz(steps);
-    while(p < m){
-        auto [curr, total] = steps[p];
-        p++;
-        int cnt = 1;
-        while(p < m and steps[p].first == curr){
-            total += steps[p].second;
-            cnt++;
-            p++;
-        }
+    for(int i = 0, x; i < m; i++){
+        cin >> x;
+        s.insert(x);
+    }
 
-        if(cnt == n){
-            ans = min(ans, total);
+    int ans = 0;
+    for(int i = 0; i < m and d >= 1; i++, d--){
+        int rem_time = extra + d;
+        auto it = s.upper_bound(rem_time);
+        if(it != s.begin()){
+            it = prev(it);
+            ans++;
+            s.erase(it);
+        }else{
+            break;
         }
     }
 
