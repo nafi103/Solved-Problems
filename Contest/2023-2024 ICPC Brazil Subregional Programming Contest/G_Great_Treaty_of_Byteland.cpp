@@ -1,0 +1,63 @@
+#include <bits/stdc++.h>
+ using namespace std;
+ struct P {
+  int x, y;
+  void read() {
+    cin >> x >> y;
+  }
+  P operator - (const P &b) const {
+    return P{x - b.x, y - b.y};
+  }
+  void operator -= (const P &b) {
+    x -= b.x, y -= b.y;
+  }
+  int64_t operator *(const P &b) {
+    return (int64_t)x * b.y - (int64_t)y * b.x;
+  }
+  int64_t triangle (const P &b, const P &c) const {
+    return (b - *this) * (c - *this);
+  }
+};
+ int32_t main() {
+  cin.tie(0) -> sync_with_stdio(0);
+    int n;
+  cin >> n;
+  vector<P> points(n);
+  for (auto &p : points) p.read();
+  map<pair<int, int>, int> id;
+  for (int i = 0; i < n; i++) {
+    id[{points[i].x, points[i].y}] = i;
+  }
+  sort(points.begin(), points.end(), [&](auto a, auto b) {
+    return make_pair(a.x, a.y) < make_pair(b.x, b.y);
+  });
+    vector<P> hull;
+  for (int rep = 0; rep < 2; ++rep) {
+    const int S = hull.size();
+    for (int i = 0; i < n; i++) {
+      while (hull.size() - S >= 2) {
+        P A = hull.end()[-2];
+        P B = hull.end()[-1];
+        if (A.triangle(B, points[i]) <= 0) {
+          break;
+        } else {
+          hull.pop_back();
+        }
+      }
+      hull.push_back(points[i]);
+    }
+    hull.pop_back();
+    reverse(points.begin(), points.end());
+  }
+  vector<int> ans;
+  for (auto &p : hull) {
+    ans.push_back(id[{p.x, p.y}]);
+  }
+  sort(ans.begin(), ans.end());
+  ans.erase(unique(ans.begin(), ans.end()), ans.end());
+  int m = ans.size();
+  for (int i = 0; i < m; i++) {
+    cout << ans[i] + 1 << " \n"[i == m - 1];
+  }
+  return 0;
+}
